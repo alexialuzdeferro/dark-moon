@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEON BRUTALIST PLAYER - POST-PUNK</title>
+    <title>NEON BRUTALIST PLAYER - CEMITÉRIOS GÓTICOS</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,6 +15,8 @@
             --neon-purple: #bf00ff;
             --bg-black: #050505;
             --brutalist-white: #ffffff;
+            --neon-gray: #888;
+            --neon-white: #fff;
         }
 
         * {
@@ -28,7 +30,7 @@
             background-color: var(--bg-black);
             color: var(--brutalist-white);
             overflow-x: hidden;
-            padding-bottom: 100px; /* Espaço para footer ou scroll */
+            padding-bottom: 100px;
         }
 
         /* FUNDO JOY DIVISION */
@@ -107,17 +109,14 @@
             align-items: center;
             cursor: pointer;
             transition: all 0.3s;
-            /* Animação de rotação contínua */
             animation: spinCircle 4s linear infinite;
         }
 
-        /* O texto dentro precisa girar ao contrário para ficar legível, ou deixamos girar junto (estilo chaos) */
         .spin-btn span {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 1.2rem;
             font-weight: bold;
             color: #000;
-            /* Faz o texto girar na direção oposta para ficar "de pé" ou remova isso para girar junto */
             animation: spinCounter 4s linear infinite; 
             pointer-events: none;
         }
@@ -133,7 +132,7 @@
             border-color: var(--neon-green);
             background: rgba(57, 255, 20, 0.2);
             box-shadow: 0 0 15px var(--neon-green);
-            font-size: 1.5rem; /* Maior */
+            font-size: 1.5rem;
         }
         .btn-play span { color: var(--neon-green); text-shadow: 0 0 5px #000; }
 
@@ -284,8 +283,8 @@
     <div class="joy-division-bg"></div>
 
     <header>
-        <h1>POST-PUNK CONTROLLER</h1>
-        <p style="color: var(--neon-blue); letter-spacing: 3px;">NEON BRUTALIST SYSTEM</p>
+        <h1>CEMITÉRIOS GÓTICOS</h1>
+        <p style="color: var(--neon-blue); letter-spacing: 3px;">MÚSICA DE IA - OUÇA EM PAZ</p>
     </header>
 
     <!-- ÁREA DO PLAYER PRINCIPAL -->
@@ -294,7 +293,7 @@
         <div id="main-player"></div>
         
         <div class="now-playing">
-            AGORA TOCANDO: <span id="track-num-disp">--</span> - <span id="track-title">SELECIONE UMA MÚSICA</span>
+            AGORA TOCANDO: <span id="track-num-disp">--</span> - <span id="track-title">SELECIONE UM CEMITÉRIO</span>
         </div>
 
         <!-- CONTROLES GIRATÓRIOS -->
@@ -328,7 +327,7 @@
 
     <!-- LISTA DE MÚSICAS -->
     <section class="playlist-section">
-        <h2 class="playlist-header">COLEÇÃO DE 38 FAIXAS</h2>
+        <h2 class="playlist-header">COLEÇÃO DE 38 CEMITÉRIOS</h2>
         <div class="grid" id="playlist-grid">
             <!-- Itens gerados via JS -->
         </div>
@@ -338,6 +337,48 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
+        // Lista de cemitérios famosos com emojis
+        const cemeteries = [
+            "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Highgate (Londres) 💀",
+            "🇫🇷 Père Lachaise (Paris) ⚰️",
+            "🇮🇹 Cimitero Monumentale (Milão) 🪦",
+            "🇺🇸 Arlington (Washington) 🦅",
+            "🇨🇿 Cemitério Vyšehrad (Praga) 🕯️",
+            "🇦🇷 Recoleta (Buenos Aires) 👻",
+            "🇷🇺 Novodevichy (Moscou) 🐺",
+            "🇯🇵 Aoyama (Tóquio) 🎎",
+            "🇲🇽 Panteón de Dolores (Cidade do México) 💀",
+            "🇹🇷 Cemitério Karacaahmet (Istambul) ☪️",
+            "🇪🇸 Cementerio de la Almudena (Madri) ⚰️",
+            "🇩🇪 Alter St.-Matthäus (Berlim) 🪦",
+            "🇧🇷 Cemitério da Consolação (SP) 💀",
+            "🇵🇹 Cemitério dos Prazeres (Lisboa) 🕯️",
+            "🇨🇱 Cemitério Geral (Santiago) 👻",
+            "🇳🇱 Zorgvlied (Amsterdã) 🌷",
+            "🇦🇹 Zentralfriedhof (Viena) 🎻",
+            "🇵🇱 Powązki (Varsóvia) 🐦",
+            "🇭🇺 Kerepesi (Budapeste) 🔥",
+            "🇷🇴 Cimitirul Bellu (Bucareste) 🦇",
+            "🇬🇷 Primeiro Cemitério (Atenas) ⚱️",
+            "🇿🇦 Woltemade (Cidade do Cabo) ☀️",
+            "🇮🇳 Cemitério Britânico (Kolkata) 🐘",
+            "🇦🇺 Rookwood (Sydney) 🦘",
+            "🇳🇴 Cemitério Nosso Salvador (Oslo) ❄️",
+            "🇸🇪 Skogskyrkogården (Estocolmo) 🌲",
+            "🇩🇰 Assistens (Copenhague) ⚓",
+            "🇫🇮 Hietaniemi (Helsinque) 🧊",
+            "🇮🇸 Fossvogur (Reiquiavique) 🌋",
+            "🇨🇦 Cemitério Mount Royal (Montreal) 🍁",
+            "🇰🇷 Cemitério Nacional (Seul) 🎎",
+            "🇻🇳 Cemitério Mártires (Hanói) 🐉",
+            "🇹🇭 Cemitério Protestante (Bangcoc) 🐍",
+            "🇪🇬 Cemitério de Basatin (Cairo) 🐫",
+            "🇿🇼 Cemitério de Heroes (Harare) 🦁",
+            "🇲🇦 Cemitério Europeu (Casablanca) 🌵",
+            "🇵🇪 Cemitério Presbítero Maestro (Lima) 💀",
+            "🇨🇴 Cemitério Central (Bogotá) ☕"
+        ];
+
         // DADOS: Lista de 38 Links
         const videoLinks = [
             "https://youtu.be/-HeCgOiirV4", "https://youtu.be/tBpQ1f77PDA", "https://youtu.be/h4Jnv-pb6sk",
@@ -378,7 +419,7 @@
                 videoId: playlist[0],
                 playerVars: {
                     'playsinline': 1,
-                    'controls': 0, // Esconder controles padrão para usar os nossos
+                    'controls': 0,
                     'disablekb': 1
                 },
                 events: {
@@ -393,7 +434,7 @@
             updateTrackInfo(0);
         }
 
-        // Atualizar estado quando o vídeo mudar (ex: acabar)
+        // Atualizar estado quando o vídeo mudar
         function onPlayerStateChange(event) {
             const playText = document.getElementById('play-text');
             
@@ -407,7 +448,6 @@
             } else if (event.data == YT.PlayerState.ENDED) {
                 isPlaying = false;
                 playText.innerText = "PLAY";
-                // Auto-play next
                 playNext();
             }
         }
@@ -439,32 +479,28 @@
 
         function playNext() {
             let nextIndex = currentTrackIndex + 1;
-            if (nextIndex >= playlist.length) nextIndex = 0; // Loop para o início
+            if (nextIndex >= playlist.length) nextIndex = 0;
             loadTrack(nextIndex);
         }
 
         function playPrev() {
             let prevIndex = currentTrackIndex - 1;
-            if (prevIndex < 0) prevIndex = playlist.length - 1; // Loop para o fim
+            if (prevIndex < 0) prevIndex = playlist.length - 1;
             loadTrack(prevIndex);
         }
 
         function playAll() {
-            loadTrack(0); // Começa do início
+            loadTrack(0);
         }
 
         // ATUALIZAR INTERFACE
         function updateTrackInfo(index) {
             document.getElementById('track-num-disp').innerText = String(index + 1).padStart(2, '0');
-            document.getElementById('track-title').innerText = `POST-PUNK TRACK ${String(index + 1).padStart(2, '0')}`;
-            
-            // Scroll suave para o topo se estiver muito em baixo
-            // document.querySelector('.player-deck').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('track-title').innerText = cemeteries[index];
         }
 
         // DESTACAR TRACK ATIVO NA LISTA
         function highlightTrack(index) {
-            // Remove active de todos
             document.querySelectorAll('.track-item').forEach((item, i) => {
                 if (i === index) {
                     item.classList.add('active');
@@ -480,12 +516,12 @@
         playlist.forEach((videoId, index) => {
             const div = document.createElement('div');
             div.className = 'track-item';
-            div.onclick = () => loadTrack(index); // Clicar no card toca
+            div.onclick = () => loadTrack(index);
             
             div.innerHTML = `
                 <div class="track-num">${String(index + 1).padStart(2, '0')}</div>
-                <div class="track-name">MÚSICA POS PUNK - ${String(index + 1).padStart(2, '0')}</div>
-                <div style="font-size: 0.8rem; color: #666;">ESTILO JOY DIVISION</div>
+                <div class="track-name">MÚSICA DE IA - ouça em paz</div>
+                <div style="font-size: 0.8rem; color: #666;">${cemeteries[index]}</div>
                 <div style="margin-top:5px;">
                     <span style="border:1px solid var(--neon-pink); padding: 2px 5px; font-size: 0.7rem;">YT LINK</span>
                 </div>
